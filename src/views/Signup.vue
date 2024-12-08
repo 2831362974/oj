@@ -1,32 +1,29 @@
 <script setup>
-//todo 1.向后端发送注册信息的post接口 2.从后端获得一个注册结果的逻辑
+//todo 获得注册结果后的弹窗和逻辑
 import {onBeforeUnmount, onBeforeMount, ref} from "vue";
 import { useStore } from "vuex";
 import {useRouter} from "vue-router";
-import axios from 'axios';
 
 import Navbar from "@/components/Signup/Navbar.vue";
 import AppFooter from "@/components/Signup/Footer.vue";
 import ArgonInput from "@/components/Signup/ArgonInput.vue";
 import ArgonButton from "@/components/Signup/ArgonButton.vue";
 import ArgonSwitch from "@/components/SignIn/ArgonSwitch.vue";
-
-const body = document.getElementsByTagName("body")[0];
+import {signup} from "@/api.js";
 
 const store = useStore();
 const router = useRouter();
+const body = document.getElementsByTagName("body")[0];
 onBeforeMount(() => {
   store.state.hideConfigButton = true;
   store.state.showNavbar = false;
   store.state.showSidenav = false;
-  store.state.showFooter = false;
   body.classList.remove("bg-gray-100");
 });
 onBeforeUnmount(() => {
   store.state.hideConfigButton = false;
   store.state.showNavbar = true;
   store.state.showSidenav = true;
-  store.state.showFooter = true;
   body.classList.add("bg-gray-100");
 });
 
@@ -34,26 +31,20 @@ const formData = ref({
   userid: '',
   password: '',
   email: '',
+  isAdmin: false,
 });
-//todo 与登录同理
-const handleRegister = async () => {
+
+// 处理注册按钮点击事件
+const handleSignup = async () => {
   try {
-    const response = await axios.post('实际的后端接口', formData.value);
-    // 注册成功，弹出提示并跳转登录页面
-    if (response.data.success) {
-      alert('注册成功');
-      await router.push('/login');
-    } else {
-      // 注册失败，弹出失败原因并清空输入框
-      alert(response.data.message);
-      formData.value = {
-        id: '',
-        password: '',
-        email:''
-      };
-    }
+    // 调用注册接口函数，传递表单数据作为参数
+    const result = await signup(formData.value.userid, formData.value.password, formData.value.email, formData.value.isAdmin);
+    // 在这里根据后端返回的结果进行不同的处理，比如注册成功后跳转到登录页面等
+    console.log('注册成功，结果：', result);
+    await router.push('/signIn'); // 假设注册成功后跳转到登录页面，可根据实际需求修改跳转路径
   } catch (error) {
-    console.error('注册请求出错', error);
+    console.error('注册失败', error);
+    // 可以在这里添加一些提示用户注册失败的交互逻辑，比如弹出提示框等
   }
 };
 </script>
@@ -102,7 +93,6 @@ const handleRegister = async () => {
                     aria-label="id"
                     v-model="formData.userid"
                 />
-
                 <argon-input
                     id="password"
                     type="password"
@@ -110,7 +100,6 @@ const handleRegister = async () => {
                     aria-label="Password"
                     v-model="formData.password"
                 />
-
                 <argon-input
                     id="securityQuestion"
                     type="text"
@@ -118,8 +107,7 @@ const handleRegister = async () => {
                     aria-label="email"
                     v-model="formData.email"
                 />
-
-                <argon-switch id="rememberMe" name="remember-me"
+                <argon-switch id="rememberMe" name="remember-me"  v-model="formData.isAdmin"
                 >我要注册管理员账号</argon-switch
                 >
                 <div class="text-center">
@@ -128,7 +116,7 @@ const handleRegister = async () => {
                       color="dark"
                       variant="gradient"
                       class="my-4 mb-2"
-                      @click="handleRegister"
+                      @click="handleSignup"
                   >Sign up</argon-button
                   >
                 </div>

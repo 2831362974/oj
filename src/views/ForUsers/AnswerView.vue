@@ -4,8 +4,9 @@
 import DefaultInfoCard from "@/components/ForUsers/AnswerView/InfoCard.vue";
 import CodeEditor from "@/components/ForUsers/AnswerView/CodeEditor.vue";
 import {onMounted, ref} from "vue";
-import axios from "axios";
 import { useRoute } from 'vue-router';
+import { getQuestionInfo, getQuestionCaseInfo, submitCode } from '@/api.js';
+
 const route = useRoute();
 // 用于存储题目信息的响应式对象（示例信息）
 const question = ref({
@@ -28,30 +29,33 @@ const result = ref({
 });
 //todo 在组件挂载后获取题目信息
 onMounted(() => {
-  const question_id = route.params.id;
-  console.log('获取到的题目id:', question_id); // 添加这行调试代码
-  if (question_id) {
-    axios.get(`http://127.0.0.1:5000/api/question/${question_id}`)
-        .then((response) => {
-          question.value = response.data;
-        })
-        .catch((error) => {
-          console.error('获取题目信息出错：', error);
-        });
-    axios.get(`http://127.0.0.1:5000/api/question-case/${question_id}`)
-        .then((response) => {
-          questionCase.value = response.data;
-        })
-        .catch((error) => {
-          console.error('获取用例信息出错：', error);
-        });
-  }
+const question_id = route.params.id;
+console.log('获取到的题目id:', question_id); // 添加这行调试代码
+if (question_id) {
+  // 调用api.js中定义的获取题目信息接口函数
+  getQuestionInfo(question_id)
+      .then((response) => {
+        question.value = response.data;
+      })
+      .catch((error) => {
+        console.error('获取题目信息出错：', error);
+      });
+  // 调用api.js中定义的获取评测用例信息接口函数
+  getQuestionCaseInfo(question_id)
+      .then((response) => {
+        questionCase.value = response.data;
+      })
+      .catch((error) => {
+        console.error('获取用例信息出错：', error);
+      });
+}
 });
-//下方监听子组件抛出的事件，获取到code数据
+
+// 下方监听子组件抛出的事件，获取到code数据
 //todo 这是提交代码的接口，这个code数据应该是传入语言和代码 还有模拟的控制台输入 有改动则在子组件CodeEditor中修改
 const handleRunCode = (code) => {
-  // 向后台发送代码运行请求，这里假设后台接口接收一个code参数
-  axios.post('后端运行代码的接口地址',  code )
+  // 调用api.js中定义的提交代码接口函数
+  submitCode(code)
       .then((response) => {
         result.value = response.data;
       })

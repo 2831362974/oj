@@ -1,47 +1,67 @@
 <script setup>
-//todo 1.从后端获取身份信息 2.向后端发送修改密码的请求
+//todo 1.从后端获取身份信息后的逻辑 2.向后端发送修改密码的请求
 //todo name属性不要的话删了
-import {onBeforeMount, onMounted, onBeforeUnmount, computed,ref} from "vue";
-import { useStore } from "vuex";
+import {onBeforeMount, onMounted, onBeforeUnmount, computed, ref} from "vue";
+import {useStore} from "vuex";
+import {useRouter} from "vue-router";
+import {getUserInfo} from '@/api.js';
+
 import setNavPills from "@/assets/js/nav-pills.js";
 import setTooltip from "@/assets/js/tooltip.js";
+
 import ArgonInput from "@/components/ProfileView/ArgonInput.vue";
 import ArgonButton from "@/components/ProfileView/ArgonButton.vue";
-import {useRouter} from "vue-router";
-import axios from 'axios';
-import ChangePasswd from "@/components/ProfileView/ChangePasswd.vue";
-
+import ChangePasswd from "@/components/ProfileView/ChangePasswdModel.vue";
 
 const router = useRouter();
 const store = useStore();
-
-const isAdmin = computed(() => store.getters.isAdmin);
+const isSignIn = computed(() => store.state.isSignIn);
+const isAdmin = computed(() => store.state.isAdmin);
 const body = document.getElementsByTagName("body")[0];
-
-// 用于存储用户信息的响应式数据(看后端数据库怎么设计）
+onMounted(() => {
+  store.state.isAbsolute = true;
+  setNavPills();
+  setTooltip();
+  if (isSignIn.value) {
+    fetchUserInfo(); // 登录了才调用获取后端数据
+  }
+});
+onBeforeMount(() => {
+  store.state.imageLayout = "profile-overview";
+  store.state.showNavbar = false;
+  store.state.hideConfigButton = true;
+  body.classList.add("profile-overview");
+});
+onBeforeUnmount(() => {
+  store.state.isAbsolute = false;
+  store.state.imageLayout = "default";
+  store.state.showNavbar = true;
+  store.state.hideConfigButton = false;
+  body.classList.remove("profile-overview");
+});
+// 用于存储用户信息的响应式数据
 const userInfo = ref({
   username: '',
   uid: '',
-  email:'',
-  owningAdminId: '',
+  email: '',
+  owningAdminId: '',//绑定的管理员
   password: ''
 });
 // 用于存储管理员用户信息的响应式数据
 const adminInfo = ref({
   username: '',
   uid: '',
-  email:'',
+  email: '',
   password: ''
 });
 
 // 新增用于控制加载提示显示的响应式数据
 const isLoading = ref(false);
-
 // 从后端获取用户信息的函数，更新加载状态
 const fetchUserInfo = async () => {
   try {
     isLoading.value = true;
-    const response = await axios.get('/api/userInfo');
+    const response = await getUserInfo(); // 调用获取身份信息接口函数，假设无参数，可按实际调整
     userInfo.value = response.data;
   } catch (error) {
     console.error('获取用户基本信息失败', error);
@@ -50,30 +70,7 @@ const fetchUserInfo = async () => {
   }
 };
 
-onMounted(() => {
-  store.state.isAbsolute = true;
-  setNavPills();
-  setTooltip();
-  fetchUserInfo();//挂载时调用获取后端数据
-});
-
-onBeforeMount(() => {
-  store.state.imageLayout = "profile-overview";
-  store.state.showNavbar = false;
-  store.state.showFooter = true;
-  store.state.hideConfigButton = true;
-  body.classList.add("profile-overview");
-});
-
-onBeforeUnmount(() => {
-  store.state.isAbsolute = false;
-  store.state.imageLayout = "default";
-  store.state.showNavbar = true;
-  store.state.showFooter = true;
-  store.state.hideConfigButton = false;
-  body.classList.remove("profile-overview");
-});
-//todo 登出逻辑，考虑也告诉后端已经退出？
+// todo 登出逻辑，考虑也告诉后端已经退出？
 const logout = () => {
   store.dispatch('logout');
   router.push('/');
@@ -83,7 +80,7 @@ const logout = () => {
   <main>
     <div class="container-fluid">
       <div
-          class="page-header min-height-300"
+          class="page-header min-height-200"
           style="
           margin-right: -24px;
           margin-left: -34%;
@@ -128,43 +125,47 @@ const logout = () => {
               <p class="text-uppercase text-sm">User Information</p>
               <div class="row">
                 <div class="col-md-6">
-                  <label for="example-text-input" class="form-control-label">Username</label>
-                  <argon-input type="text" v-if="isAdmin" :value="adminInfo.username" />
-                  <argon-input type="text" v-else :value="userInfo.username" />
+                  <label for="example-text-input" class="form-control-label">Userid</label>
+                  <argon-input type="text" v-if="isAdmin" :value="adminInfo.id"/>
+                  <argon-input type="text" v-else :value="userInfo.id"/>
 
                 </div>
                 <div class="col-md-6">
-                  <label for="example-text-input" class="form-control-label">id</label>
-                  <argon-input type="text" v-if="isAdmin" :value="adminInfo.id" />
-                  <argon-input type="text" v-else :value="userInfo.id" />
+                  <label for="example-text-input" class="form-control-label">email</label>
+                  <argon-input type="text" v-if="isAdmin" :value="adminInfo.email"/>
+                  <argon-input type="text" v-else :value="userInfo.email"/>
                 </div>
-<!--todo owing admin id 所属管理员账号   看后端实现情况            -->
+                <!--todo owing admin id 所属管理员账号   看后端实现情况            -->
                 <div class="col-md-6" v-if="!isAdmin">
                   <label for="example-text-input" class="form-control-label">owning admin id</label>
-                  <argon-input type="text" :value="userInfo.owningAdminId" />
+                  <argon-input type="text" :value="userInfo.owningAdminId"/>
                 </div>
                 <div class="col-md-6">
-                  <label for="example-text-input" class="form-control-label">email</label>
-                  <argon-input type="text" :value="userInfo.email" />
+                  <label for="example-text-input" class="form-control-label">password</label>
+                  <argon-input type="password" :value="userInfo.password"/>
                 </div>
               </div>
-              <hr class="horizontal dark" />
+              <hr class="horizontal dark"/>
               <div class="d-flex align-items-center">
-              <p class="text-uppercase text-sm">Special Information</p>
+                <p class="text-uppercase text-sm">Special Information</p>
               </div>
               <div class="row">
                 <div class="col-md-8">
                   <label for="example-text-input" class="form-control-label">password</label>
-                  <argon-input type="password" :value="userInfo.password" />
+                  <argon-input type="password" :value="userInfo.password"/>
                 </div>
-                <argon-button color="success" size="sm" class="my-auto" data-bs-toggle="modal" data-bs-target="#changepasswd">修改密码</argon-button>
-                <change-passwd />
+                <div class="col-md-4">
+                  <argon-button color="success" size="sm" class="my-auto" data-bs-toggle="modal"
+                                data-bs-target="#changePasswd">修改密码
+                  </argon-button>
+                </div>
               </div>
+              <change-passwd/>
             </div>
           </div>
         </div>
         <div class="col-md-4">
-          <statistic-card />
+          <statistic-card/>
         </div>
       </div>
     </div>

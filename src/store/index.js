@@ -1,5 +1,4 @@
 import { createStore } from "vuex";
-import axios from "axios";
 
 export default createStore({
   state: {
@@ -24,7 +23,7 @@ export default createStore({
     layout: "default",
 
     /*登录状态*/
-    isSignIn:true,
+    isSignIn:false,
     isAdmin:false,
     isRoot:false,
 
@@ -54,11 +53,11 @@ export default createStore({
     sidebarType(state, payload) {
       state.sidebarType = payload;
     },
-    setSignIn(state, value) {
+    setIsSignIn(state, value) {
       state.isSignIn = value;
     },
-    setAdmin(state, value) {
-      state.isAdmin = value;
+    setIsAdmin(state, payload) {
+      state.isAdmin = payload;
     },
   },
   /*异步操作*/

@@ -84,7 +84,7 @@ const closeMenu = () => {
           <!--            设置，i元素为图标-->
           <li class="px-3 nav-item d-flex align-items-center">
             <a class="p-0 nav-link text-white" @click="toggleConfigurator">
-              <i class="bi bi-nut cursor-pointer fixed-plugin-button-nav"></i>
+              <i class="fa-solid fa-gear cursor-pointer fixed-plugin-button-nav"></i>
             </a>
           </li>
 <!--          消息菜单按钮，i元素为图标-->

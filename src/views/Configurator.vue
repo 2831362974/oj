@@ -1,4 +1,5 @@
 <script setup>
+//界面显示设置
 import { computed } from "vue";
 import { useStore } from "vuex";
 import { activateDarkMode, deactivateDarkMode } from "@/assets/js/dark-mode";
@@ -49,7 +50,7 @@ const darkMode = () => {
           :class="'float-end'"
         >
           <button class="p-0 btn btn-link text-dark fixed-plugin-close-button">
-            <i class="bi bi-backspace"></i>
+            <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
         <!-- End Toggle Button -->

@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@popperjs/core": "2.11.8",
     "@codemirror/lang-javascript": "^6.2.2",
     "@codemirror/view": "^6.35.0",
     "ace-builds": "^1.36.5",
