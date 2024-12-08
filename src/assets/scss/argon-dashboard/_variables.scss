@@ -1,5 +1,5 @@
 // Variables
-//
+//定义该模板中的变量，同时引入其他所有变量文件
 // Variables should follow the `$component-state-property-size` formula for
 // consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
 
@@ -710,7 +710,7 @@ $table-group-separator-color: currentColor !default;
 
 $table-caption-color: $text-muted !default;
 
-$table-bg-level: -9 !default;
+$table-bg-difficulty: -9 !default;
 $table-bg-scale: -80% !default;
 
 $table-variants: (
@@ -1518,9 +1518,9 @@ $alert-border-radius: $border-radius-md !default;
 $alert-link-font-weight: $font-weight-bold !default;
 $alert-border-width: $border-width !default;
 
-$alert-bg-level: -10 !default;
-$alert-border-level: -9 !default;
-$alert-color-level: 6 !default;
+$alert-bg-difficulty: -10 !default;
+$alert-border-difficulty: -9 !default;
+$alert-color-difficulty: 6 !default;
 
 $alert-dismissible-padding-r: $alert-padding-x * 3 !default; // 3x covers width of x plus default padding on either side
 
@@ -1550,8 +1550,8 @@ $list-group-border-radius: $border-radius-md !default;
 
 $list-group-item-padding-y: $spacer / 2 !default;
 $list-group-item-padding-x: $spacer !default;
-$list-group-item-bg-level: -9 !default;
-$list-group-item-color-level: 6 !default;
+$list-group-item-bg-difficulty: -9 !default;
+$list-group-item-color-difficulty: 6 !default;
 
 $list-group-hover-bg: $gray-100 !default;
 $list-group-active-color: $component-active-color !default;

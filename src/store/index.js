@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import axios from "axios";
+import createPersistedState from 'vuex-persistedstate';
 
 export default createStore({
   state: {
@@ -9,7 +9,6 @@ export default createStore({
 
     sidebarType: "bg-white",
     darkMode: false,
-    isNavFixed: false,
 
     isAbsolute: false,
 
@@ -24,10 +23,11 @@ export default createStore({
     layout: "default",
 
     /*登录状态*/
-    isSignIn:true,
+    isSignIn:false,
     isAdmin:false,
     isRoot:false,
-
+    username:'',
+    token: localStorage.getItem('token') || '',
     /*数据存储以方便筛选/搜索功能*/
   },
   /*同步操作*/
@@ -48,17 +48,28 @@ export default createStore({
         state.isPinned = true;
       }
     },
-    navbarFixed(state) {
-      state.isNavFixed = state.isNavFixed === false;
-    },
     sidebarType(state, payload) {
       state.sidebarType = payload;
     },
-    setSignIn(state, value) {
+    setIsSignIn(state, value) {
       state.isSignIn = value;
     },
-    setAdmin(state, value) {
-      state.isAdmin = value;
+    setIsAdmin(state, payload) {
+      state.isAdmin = payload;
+    },
+    setIsRoot(state, payload) {
+      state.isRoot = payload;
+    },
+    setUsername(state, payload) {
+      state.username = payload;
+    },
+    clearLoginState(state) {
+      state.isSignIn = false;
+      state.isAdmin = false;
+      state.isRoot = false;
+      state.username='';
+      state.token = '';
+      localStorage.removeItem('token');
     },
   },
   /*异步操作*/
@@ -71,12 +82,16 @@ export default createStore({
       commit('setAdmin', isAdmin);
     },
     logout({ commit }) {
-      commit('setSignIn', false);
-      commit('setAdmin', false);
+      commit('clearLoginState');
     },
   },
+  plugins: [createPersistedState({
+    storage: window.localStorage,  // 指定使用localStorage来存储数据
+    paths: ['isSignIn', 'isAdmin','isRoot','username']  // 明确要持久化存储的state中的属性，根据实际需求添加更多
+  })],
   getters: {
     isSignIn: (state) => state.isSignIn,
     isAdmin: (state) => state.isAdmin,
+    isRoot: (state) => state.isRoot,
   },
 });

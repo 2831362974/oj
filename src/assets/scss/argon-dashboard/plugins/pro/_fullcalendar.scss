@@ -574,7 +574,7 @@ a.fc-event:hover {
 A HORIZONTAL event
 */
 .fc-h-event {
-  /* allowed to be top-level */
+  /* allowed to be top-difficulty */
   display: block;
   border: 1px solid #3788d8;
   border: 1px solid var(--fc-event-border-color, #3788d8);
@@ -864,7 +864,7 @@ A HORIZONTAL event
   position: static; /* will cause inner absolute stuff to expand to <td> */
 }
 .fc-daygrid-event {
-  /* make root-level, because will be dragged-and-dropped outside of a component root */
+  /* make root-difficulty, because will be dragged-and-dropped outside of a component root */
   position: relative; /* for z-indexes assigned later */
   white-space: nowrap;
   border-radius: 3px; /* dot event needs this to when selected */
@@ -926,7 +926,7 @@ A VERTICAL event
 */
 
 .fc-v-event {
-  /* allowed to be top-level */
+  /* allowed to be top-difficulty */
   display: block;
   border: 1px solid #3788d8;
   border: 1px solid var(--fc-event-border-color, #3788d8);

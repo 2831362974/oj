@@ -1,16 +1,15 @@
 <script setup>
+//界面显示设置
 import { computed } from "vue";
 import { useStore } from "vuex";
 import { activateDarkMode, deactivateDarkMode } from "@/assets/js/dark-mode";
 
 const store = useStore();
 // state
-const isNavFixed = computed(() => store.state.isNavFixed);
 const sidebarType = computed(() => store.state.sidebarType);
 const toggleConfigurator = () => store.commit("toggleConfigurator");
 
 // mutations
-const navbarFixed = () => store.commit("navbarFixed");
 const setSidebarType = (type) => store.commit("sidebarType", type);
 
 const sidebarColor = (color = "success") => {
@@ -49,7 +48,7 @@ const darkMode = () => {
           :class="'float-end'"
         >
           <button class="p-0 btn btn-link text-dark fixed-plugin-close-button">
-            <i class="bi bi-backspace"></i>
+            <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
         <!-- End Toggle Button -->
@@ -133,19 +132,7 @@ const darkMode = () => {
         </p>
         <!-- Navbar Fixed -->
         <!-- Navbar Fixed -->
-        <div class="mt-3 d-flex">
-          <h6 class="mb-0">Navbar Fixed</h6>
-          <div class="form-check form-switch ps-0 ms-auto my-auto">
-            <input
-              class="mt-1 form-check-input"
-              :class="' ms-auto'"
-              type="checkbox"
-              id="navbarFixed"
-              :checked="isNavFixed"
-              @click="navbarFixed"
-            />
-          </div>
-        </div>
+
 
         <hr class="horizontal dark my-4" />
         <div class="mt-2 mb-5 d-flex">

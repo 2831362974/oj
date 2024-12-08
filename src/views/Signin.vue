@@ -1,57 +1,96 @@
 <script setup>
-//todo 1.向后端发送用户登录信息的接口 2.从后端获得一个登录结果的逻辑
+//修改完成
 import {onBeforeUnmount, onBeforeMount, ref} from "vue";
 import { useStore } from "vuex";
+import {useRouter} from "vue-router";
+import {applyUnlockUser, signIn} from "@/api/api.js";
+import { ElMessage } from 'element-plus';
 import Navbar from "@/components/SignIn/Navbar.vue";
 import ArgonInput from "@/components/SignIn/ArgonInput.vue";
 import ArgonButton from "@/components/SignIn/ArgonButton.vue";
 import ArgonSwitch from "@/components/SignIn/ArgonSwitch.vue";
-import {useRouter} from "vue-router";
-import Swal from'sweetalert2';
 
 const body = document.getElementsByTagName("body")[0];
-
 const store = useStore();
 onBeforeMount(() => {
   store.state.hideConfigButton = true;
   store.state.showNavbar = false;
   store.state.showSidenav = false;
-  store.state.showFooter = false;
   body.classList.remove("bg-gray-100");
 });
 onBeforeUnmount(() => {
   store.state.hideConfigButton = false;
   store.state.showNavbar = true;
   store.state.showSidenav = true;
-  store.state.showFooter = true;
   body.classList.add("bg-gray-100");
 });
 const router = useRouter();
-const userid = ref('');
-const password = ref('');
-const isAdmin = ref(false);
-const handleSubmit = async () => {
-  //todo 这里应该是实际的登录验证逻辑，比如发送请求到后端验证用户名和密码，再接收后端发送的结果，这里简单模拟验证成功
-  if (userid.value === 'test' && password.value === '123456') {
-    await store.dispatch('login', { isAdmin: isAdmin.value }); // 调用Vuex中的login1动作，更新登录状态
-    await Swal.fire({
-      title: '登录成功！',
-      icon: 'success',
-      showConfirmButton: false,
-      timer: 1500 // 弹框显示1.5秒后自动关闭
-    });
-    setTimeout(() => {
-      router.push('/'); // 跳转到首页，使用路由实例的push方法
-    }, 1500); // 等待弹框显示完1.5秒后再跳转
-  } else {
-    await Swal.fire({
-      title: '登录失败，请检查用户名和密码',
-      icon: 'error',
-      showConfirmButton: false,
-      timer: 1500
-    });
+// 登录表单数据
+const dataForm = ref({
+  username: '',
+  password: '',
+  isAdmin: false,
+});
+const dataForm2=ref({
+  username:''
+})
+// 登录状态
+const loading = ref(false); // 按钮加载状态
+const errorMessage = ref(''); // 错误消息
+const showApplyForm=ref(false);
+// 处理登录
+const handleLogin = async () => {
+  loading.value = true;
+  errorMessage.value = '';
+
+  try {
+    // 调用登录 API
+    const response = await signIn(dataForm.value);
+    const token = response.headers.authorization;
+    // 假设成功后将 token 保存到 localStorage，并跳转到主页
+    if(token){
+      localStorage.setItem('token', token);
+      store.commit('setUsername', dataForm.value.username);
+    }
+    // 更新 Vuex Store 状态
+    store.commit('setIsSignIn', true);
+    if(dataForm.value.isAdmin){
+      store.commit('setIsAdmin', true);
+    }else{
+      store.commit('setIsAdmin', false);
+    }
+    ElMessage.success(response.data);
+    await router.push('/');
+  } catch (e) {
+    console.error(e);
+    // 错误处理
+    errorMessage.value = e.response?.data?.message || '登录失败，请检查账号或密码';
+    ElMessage.error(errorMessage.value);
+  } finally {
+    loading.value = false;
   }
 };
+const handleApplyUnlock = async () => {
+  try{
+    const response=await applyUnlockUser(dataForm2.value.username);
+    ElMessage.success(response.data);
+  }catch(e){
+    console.error(e);
+    ElMessage.error('申请失败，请检查用户名');
+  }
+};
+// 控制申请解锁表单的函数
+const goToApply = () =>{
+  showApplyForm.value=!showApplyForm.value;
+}
+// 控制注册跳转的函数
+const goToSignup = () => {
+  router.push('/signUp');
+};
+// 控制忘记密码跳转的函数
+const goToReset=()=>{
+  router.push('/reset');
+}
 </script>
 <template>
   <div class="container top-0 position-sticky z-index-sticky">
@@ -79,7 +118,8 @@ const handleSubmit = async () => {
                   <p class="mb-0">Enter your id and password to sign in</p>
                 </div>
                 <div class="card-body">
-                  <form role="form" @submit.prevent="handleSubmit">
+                  <template v-if="!showApplyForm">
+                    <form role="form" @submit.prevent="handleLogin">
                     <div class="mb-3">
                       <argon-input
                           id="userid"
@@ -87,7 +127,7 @@ const handleSubmit = async () => {
                           placeholder="your id"
                           name="id"
                           size="lg"
-                          v-model="userid"
+                          v-model="dataForm.username"
                       />
                     </div>
                     <div class="mb-3">
@@ -97,10 +137,10 @@ const handleSubmit = async () => {
                           placeholder="your Password"
                           name="password"
                           size="lg"
-                          v-model="password"
+                          v-model="dataForm.password"
                       />
                     </div>
-                    <argon-switch id="isAdmin" name="isAdmin" @click="isAdmin=true"
+                    <argon-switch id="isAdmin" name="isAdmin" @click="dataForm.isAdmin=true"
                     >我是管理员</argon-switch
                     >
 
@@ -116,15 +156,46 @@ const handleSubmit = async () => {
                       >
                     </div>
                   </form>
+                  </template>
+                  <template v-else>
+                    <form role="form" @submit.prevent="handleApplyUnlock">
+                    <div class="mb-3">
+                      <argon-input
+                          id="username"
+                          type="text"
+                          placeholder="your username"
+                          name="password"
+                          size="lg"
+                          v-model="dataForm2.username"
+                      />
+                    </div>
+                      <div class="text-center">
+                        <argon-button
+                            type="submit"
+                            class="mt-4"
+                            variant="gradient"
+                            color="success"
+                            fullWidth
+                            size="lg"
+                        >Apply unlock</argon-button
+                        >
+                      </div>
+                    </form>
+                  </template>
                 </div>
                 <div class="px-1 pt-0 text-center card-footer px-lg-2">
                   <p class="mx-auto mb-4 text-sm">
+                    Is your account locked?
+                    <a href="javascript:" class="text-success text-gradient font-weight-bold"  @click.prevent="goToApply">{{!showApplyForm?'Apply unlock':'Back to login'}}</a>
+                  </p>
+                  <p class="mx-auto mb-4 text-sm">
                     Don't have an account?
-                    <a
-                        href="javascript:"
-                        class="text-success text-gradient font-weight-bold"
-                    >Sign up</a
-                    >
+                    <a href="javascript:" class="text-success text-gradient font-weight-bold"  @click.prevent="goToSignup">Sign up</a>
+                  </p>
+                </div>
+                <div class="px-1 pt-0 text-center card-footer px-lg-2">
+                  <p class="mx-auto mb-4 text-sm">
+                    <a href="javascript:" class="text-success text-gradient font-weight-bold" @click.prevent="goToReset"> Forget password?</a>
                   </p>
                 </div>
               </div>

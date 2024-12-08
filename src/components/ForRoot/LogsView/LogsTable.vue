@@ -22,8 +22,8 @@ onMounted(() =>{
 })
 
 // 获取难度徽章的类名
-const getDifficultyBadge = (level) => {
-  switch (level) {
+const getDifficultyBadge = (difficulty) => {
+  switch (difficulty) {
     case '1': return 'bg-gradient-success';
     case '2': return 'bg-gradient-success';
     case '3': return 'bg-gradient-warning';
@@ -76,7 +76,7 @@ const getDifficultyBadge = (level) => {
               <p class="text-xs font-weight-bold mb-0">{{ item.description.content }}</p>
             </td>
             <td class="align-middle text-center text-sm">
-              <span :class="['badge badge-sm', getDifficultyBadge(item.level)]">{{ item.level }}</span>
+              <span :class="['badge badge-sm', getDifficultyBadge(item.difficulty)]">{{ item.difficulty }}</span>
             </td>
             <td class="align-middle text-center">
               <a href="javascript:" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit question" @click="openEditModal(item)">Edit</a>

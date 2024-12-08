@@ -14,6 +14,7 @@ const getRoute = () => {
 const store = useStore();
 const isSignIn = computed(() => store.getters.isSignIn);
 const isAdmin = computed(() => store.getters.isAdmin);
+const isRoot = computed(() => store.getters.isRoot);
 </script>
 <template>
   <div
@@ -33,7 +34,7 @@ const isAdmin = computed(() => store.getters.isAdmin);
         </sidenav-item>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item" v-if="!isRoot">
         <sidenav-item
           to="/question"
           :class="getRoute() === 'question' ? 'active' : ''"
@@ -41,17 +42,17 @@ const isAdmin = computed(() => store.getters.isAdmin);
         >
           <template v-slot:icon>
             <i
-              class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"
+              class="ni ni-camera-compact text-warning text-sm opacity-10"
             ></i>
           </template>
         </sidenav-item>
       </li>
 
-      <li class="nav-item" v-if="!isAdmin">
+      <li class="nav-item" v-if="!isAdmin&&!isRoot">
         <sidenav-item
-          to="/answer"
-          :class="getRoute() === 'answer' ? 'active' : ''"
-          :navText="'做题'"
+          to="/record"
+          :class="getRoute() === 'record' ? 'active' : ''"
+          :navText="'我的题目'"
         >
           <template v-slot:icon>
             <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
@@ -70,17 +71,28 @@ const isAdmin = computed(() => store.getters.isAdmin);
           </template>
         </sidenav-item>
       </li>
-
-      <li class="mt-3 nav-item">
-
-        <h6
-           class="text-xs ps-4 text-uppercase font-weight-bolder opacity-6"
-          :class="'ms-2'"
+      <li class="nav-item" v-if="isRoot">
+        <sidenav-item
+            to="/admin/root"
+            :class="getRoute() === 'admin/root' ? 'active' : ''"
+            :navText="'用户管理'"
         >
-          ACCOUNT
-        </h6>
+          <template v-slot:icon>
+            <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
+          </template>
+        </sidenav-item>
       </li>
-
+      <li class="nav-item" v-if="isRoot">
+        <sidenav-item
+            to="/statistic"
+            :class="getRoute() === 'statistic' ? 'active' : ''"
+            :navText="'后台管理'"
+        >
+          <template v-slot:icon>
+            <i class="ni ni-single-copy-04 text-success text-sm opacity-10"></i>
+          </template>
+        </sidenav-item>
+      </li>
       <li class="nav-item" v-if="isSignIn">
         <sidenav-item
           to="/profile"
@@ -105,7 +117,7 @@ const isAdmin = computed(() => store.getters.isAdmin);
         </sidenav-item>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item" v-if="!isRoot">
         <sidenav-item
           to="/signup"
           :class="getRoute() === 'signup' ? 'active' : ''"
@@ -119,7 +131,7 @@ const isAdmin = computed(() => store.getters.isAdmin);
     </ul>
   </div>
 
-  <div class="pt-3 mx-3 mt-3 sidenav-footer">
+  <div class="pt-3 mx-3 mt-3 sidenav-footer" v-if="!isRoot">
     <sidenav-card
       :card="{
         title: 'Need Help?',

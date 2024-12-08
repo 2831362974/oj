@@ -1,17 +1,8 @@
 <script setup>
 defineProps({
-  btnBackground: {
-    type: String,
-    default: "",
-  },
-  isBlur: {
-    type: String,
-    default: "",
-  },
-  darkMode: {
-    type: Boolean,
-    default: false,
-  },
+  btnBackground: {type: String, default: "",},
+  isBlur: {type: String, default: "",},
+  darkMode: {type: Boolean, default: false,},
   isBtn: { type: String, default: "bg-gradient-light" },
 });
 </script>
@@ -20,14 +11,13 @@ defineProps({
   <nav
     class="navbar navbar-expand-lg top-0 z-index-3 position-absolute mt-4"
     :class="isBlur ? isBlur : 'shadow-none my-2 navbar-transparent w-100'"
-  >
+  ><!--由注册/登录设定样式-->
     <div class="container ps-2 pe-0">
       <router-link
         class="navbar-brand font-weight-bolder ms-lg-0 ms-3"
         :class="darkMode ? 'text-black' : 'text-white'"
         to="/"
-        >My-OJ</router-link
-      >
+        >My-OJ</router-link>
       <button
         class="shadow-none navbar-toggler ms-2"
         type="button"
@@ -88,6 +78,16 @@ defineProps({
               ></i>
               登录
             </router-link>
+          </li>
+        </ul>
+        <ul class="navbar-nav d-lg-block d-none">
+          <li class="nav-item">
+            <a
+              href=""
+              class="btn btn-sm mb-0 me-1"
+              :class="isBtn"
+              >联系我们</a
+            >
           </li>
         </ul>
       </div>

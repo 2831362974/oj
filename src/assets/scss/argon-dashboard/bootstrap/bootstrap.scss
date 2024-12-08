@@ -7,7 +7,7 @@
 
 // scss-docs-start import-stack
 // Configuration
-@import "functions";
+@import "functions"; //已经包含functions
 @import "variables";
 @import "mixins";
 @import "utilities";

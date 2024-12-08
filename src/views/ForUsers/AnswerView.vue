@@ -1,85 +1,66 @@
 <script setup>
-//todo 1.向后端发送代码的post请求接口 从后端获取代码提交结果的逻辑
-//todo 2.从后端获取评测用例信息的get
 import DefaultInfoCard from "@/components/ForUsers/AnswerView/InfoCard.vue";
 import CodeEditor from "@/components/ForUsers/AnswerView/CodeEditor.vue";
 import {onMounted, ref} from "vue";
-import axios from "axios";
 import { useRoute } from 'vue-router';
+import { getQuestionInfo, runCode } from '@/api/api.js';
+
 const route = useRoute();
+const problemId = route.params.id;
 // 用于存储题目信息的响应式对象（示例信息）
 const question = ref({
+  id: null,
   title: '',
-  description: {
-    content:'',
-    limitTime:'',
-    limitMem:''
-  },
-  level: '',
+  description: '',
+  maxCpuTime:'',
+  maxMemory:'',
+  difficulty:'',
 });
-const questionCase = ref({
-  case_in:'',
-  case_out:'',
-  case_id:''
-});
-// 用于存储运行结果的响应式对象
-const result = ref({
-  description: ''
-});
-//todo 在组件挂载后获取题目信息
-onMounted(() => {
-  const question_id = route.params.id;
-  console.log('获取到的题目id:', question_id); // 添加这行调试代码
-  if (question_id) {
-    axios.get(`http://127.0.0.1:5000/api/question/${question_id}`)
-        .then((response) => {
-          question.value = response.data;
-        })
-        .catch((error) => {
-          console.error('获取题目信息出错：', error);
-        });
-    axios.get(`http://127.0.0.1:5000/api/question-case/${question_id}`)
-        .then((response) => {
-          questionCase.value = response.data;
-        })
-        .catch((error) => {
-          console.error('获取用例信息出错：', error);
-        });
+// 在组件挂载后获取题目数据
+onMounted(async () => {
+  if (problemId) {
+    try {
+      const response = await getQuestionInfo(problemId);
+      if (response) {
+        question.value = response.data;
+        // 获取该题目的评测用例数据
+      }
+    } catch (error) {
+      console.error('请求出错:', error);
+    }
   }
 });
-//下方监听子组件抛出的事件，获取到code数据
-//todo 这是提交代码的接口，这个code数据应该是传入语言和代码 还有模拟的控制台输入 有改动则在子组件CodeEditor中修改
-const handleRunCode = (code) => {
-  // 向后台发送代码运行请求，这里假设后台接口接收一个code参数
-  axios.post('后端运行代码的接口地址',  code )
-      .then((response) => {
-        result.value = response.data;
-      })
-      .catch((error) => {
-        console.error('运行代码获取结果出错：', error);
-      });
+
+//todo 用于存储运行结果的响应式对象，对象数组
+const result = ref([]
+);
+//todo 提交代码，code数据传入语言和代码，problemId 返回一个数组，是评测用例的结果
+const handleRunCode = async (codeData) => {
+  // 调用api.js中定义的提交代码接口函数
+  try{
+  const response=await runCode(codeData)
+  result.value = response.data;
+  alert(response.data);
+  } catch(error){
+    console.error('运行代码获取结果出错：', error);
+  }
 };
 </script>
 <template>
   <div class="py-4 container-fluid">
     <div class="row align-items-center">
       <div class="col-lg-8">
-        <default-info-card title="题目描述" :description1="question.description.content" :description2="question.description.limitTime">
-          <template v-slot:text1>
-            <span>要求:</span>
-          </template>
-          <template v-slot:text2>
-            <span>时空限制:</span>
-          </template>
-          </default-info-card>
+        <default-info-card title="题目描述" :description1="question.description">
+          <template v-slot:text1>题目描述:  </template>
+        </default-info-card>
       </div>
-      <div class="col-lg-4">
-        <default-info-card title="评测用例" :description1="questionCase.case_in" :description2="questionCase.case_out">
+      <div class="col-lg-4" >
+        <default-info-card title="时空要求" :description1="question.maxCpuTime" :description2="question.maxMemory" >
           <template v-slot:text1>
-            <span>标准输入:</span>
+            <span>时间限制:</span>
           </template>
           <template v-slot:text2>
-            <span>标准输出:</span>
+            <span>空间限制:</span>
           </template>
         </default-info-card>
       </div>
@@ -91,7 +72,7 @@ const handleRunCode = (code) => {
         </div>
       </div>
       <div class="col-lg-4">
-        <default-info-card  title="运行结果" :description="result.description"/>
+        <default-info-card  title="运行结果" :description1="result.value"/>
       </div>
     </div>
   </div>

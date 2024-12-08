@@ -10,21 +10,22 @@
 // =========================================================
 //
 // * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-// Bootstrap Functions
+// 后面导入的覆盖前面导入的
+// Bootstrap Functions（重复导入？）
 @import "argon-dashboard/bootstrap/functions";
 
-// Custom Variables
-@import "argon-dashboard/custom/variables";
-
-// Theme Variables
+// 引入模板的所有变量文件
 @import "argon-dashboard/variables";
 
-// Bootstrap Core
+// 引入Bootstrap所有scss文件
 @import "argon-dashboard/bootstrap/bootstrap";
 
-// Theme Core
+// 引入本模板的scss——pro文件
 @import "argon-dashboard/theme-pro";
 
-// Custom Variables
+@import "argon-dashboard/theme";
+/*
+// Custom Variables（啥也没有？）
 @import "argon-dashboard/custom/styles";
+@import "argon-dashboard/custom/variables";
+*/

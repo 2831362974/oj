@@ -43,7 +43,7 @@ const closeMenu = () => {
           class="pe-md-3 d-flex align-items-center"
           :class="'ms-md-auto'"
         >
-          <div class="input-group">
+<!--          <div class="input-group">
             <span class="input-group-text text-body">
               <i class="fas fa-search" aria-hidden="true"></i>
             </span>
@@ -52,20 +52,10 @@ const closeMenu = () => {
               class="form-control"
               :placeholder="'Type here...'"
             />
-          </div>
+          </div>-->
         </div>
 <!--        登录入口,i元素为图标-->
         <ul class="navbar-nav justify-content-end">
-          <li class="nav-item d-flex align-items-center">
-            <router-link
-              :to="{ name: 'SignIn' }"
-              class="px-0 nav-link font-weight-bold text-white"
-              target="_blank"
-            >
-              <i class="fa fa-user" :class="'me-sm-2'"></i>
-              <span  class="d-sm-inline d-none">Sign In</span>
-            </router-link>
-          </li>
 <!--          侧边栏控制，包裹的div用三条横线伪造图标-->
           <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
             <a
@@ -84,7 +74,7 @@ const closeMenu = () => {
           <!--            设置，i元素为图标-->
           <li class="px-3 nav-item d-flex align-items-center">
             <a class="p-0 nav-link text-white" @click="toggleConfigurator">
-              <i class="bi bi-nut cursor-pointer fixed-plugin-button-nav"></i>
+              <i class="fa-solid fa-gear cursor-pointer fixed-plugin-button-nav"></i>
             </a>
           </li>
 <!--          消息菜单按钮，i元素为图标-->
@@ -113,13 +103,7 @@ const closeMenu = () => {
               <li class="mb-2">
                 <a class="dropdown-item border-radius-md" href="">
                   <div class="py-1 d-flex">
-                    <div class="my-auto">
-                      <img
-                        src="../../assets/img/team-2.jpg"
-                        class="avatar avatar-sm me-3"
-                        alt="user image"
-                      />
-                    </div>
+
                     <div class="d-flex flex-column justify-content-center">
                       <h6 class="mb-1 text-sm font-weight-normal">
                         <span class="font-weight-bold">New message</span> from 1
@@ -135,13 +119,6 @@ const closeMenu = () => {
               <li class="mb-2">
                 <a class="dropdown-item border-radius-md" href="">
                   <div class="py-1 d-flex">
-                    <div class="my-auto">
-                      <img
-                        src="../../assets/img/small-logos/logo-spotify.svg"
-                        class="avatar avatar-sm bg-gradient-dark me-3"
-                        alt="logo spotify"
-                      />
-                    </div>
                     <div class="d-flex flex-column justify-content-center">
                       <h6 class="mb-1 text-sm font-weight-normal">
                         <span class="font-weight-bold">New album</span> by

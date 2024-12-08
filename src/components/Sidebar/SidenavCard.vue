@@ -34,11 +34,11 @@ defineProps({
 
       <h6 class="mb-0 text-dark up">Need Help ?</h6>
 
-      <p class="text-xs font-weight-bold">Please check our docs</p>
+      <p class="text-xs font-weight-bold">Please check our logs</p>
     </div>
 
     <a
-      href="https://www.creative-tim.com/learning-lab/vue/overview/argon-dashboard/"
+      href=""
       target="_blank"
       class="mb-3 btn btn-dark btn-sm w-100"
     >
