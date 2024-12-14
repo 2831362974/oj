@@ -14,8 +14,8 @@ export const changePassword = ({currentPassword, newPassword}) => http.post('/us
 // 4. 获取个人信息数据接口函数*
 export const getUserInfo = (username) => http.get(`/user/user-info/${username}`);
 
-// 5. 提交代码
-export const runCode = (code) => http.post('/submission/run-code', code);
+// 5. 提交代码*
+export const runCode = (codeData) => http.post('/submission/run-code', codeData);
 
 // 6. 用户申请解锁 400
 export const applyUnlockUser = (username) => http.post(`/user/apply-unlock/${username}`);
@@ -46,10 +46,11 @@ export const deleteQuestionCase = (caseId) => http.delete(`/testcase/delete/${ca
 export const editTestCases = (caseId, testCaseData) => http.put(`/testcase/edit/${caseId}`,testCaseData);
 
 // 10. 收藏题目
-export const star = (problemId) => http.post(`/favorite-problem`);
+export const star = (problemId) => http.post(`/problem/favorite-problem/${problemId}`);
 // 11. 取消收藏题目
-export const cancelStar = (problemId) => http.delete(`/favorite-problem`);
-
+export const cancelStar = (problemId) => http.delete(`/problem/favorite-problem/${problemId}`);
+// 12. 检测是否收藏
+export const getIsStar = (problemId) => http.get(`/problem/checkFavorite/${problemId}`);
 // 12.排序 后端
 // 13.搜索 前端
 

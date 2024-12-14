@@ -11,6 +11,12 @@ import 'ace-builds/src-noconflict/mode-c_cpp';
 import 'ace-builds/src-noconflict/theme-monokai';
 import 'ace-builds/src-noconflict/theme-chrome';
 
+defineProps({
+      isStar:{
+        type:Boolean,
+        required: true,
+      }
+})
 // 编辑器内容的响应式数据
 const content = ref('');
 // 默认语言模式为Java
@@ -32,6 +38,7 @@ editorRef.value = undefined;
 const updateEditorLanguage = () => {
   editorOptions.value.mode = languageMode.value;
 };
+
 onMounted(() => {
   if (editorRef.value) {
     const editor = editorRef.value.editor;
@@ -43,14 +50,18 @@ onMounted(() => {
 const emit = defineEmits(['runCode']);
 // 运行代码的方法 抛出事件runCode，父组件可调用数据
 const runCode = () => {
-  const codeData = {
+  const currentCode = {
     language: languageMode.value,
     code: content.value,
-
   };
-  emit('runCode', codeData);
+  emit('runCode', currentCode);
 };
-
+const handleStar =()=>{
+  emit('handleStar');
+}
+const handleCancelStar=()=>{
+  emit('handleCancelStar');
+}
 </script>
 
 <template>
@@ -59,7 +70,7 @@ const runCode = () => {
         ref="editorRef"
         v-model:value="content"
         :options="editorOptions"
-        style="height: 300px; border-radius: 16px;"
+        style="height: 350px; border-radius: 16px;"
     />
     <div class="row">
       <!-- Bootstrap 5 下拉菜单 -->
@@ -84,12 +95,20 @@ const runCode = () => {
           >提交
           </button>
       </div>
-      <div class="col-md-3 d-flex justify-content-center text-center mt-4">
+      <div class="col-md-3 d-flex justify-content-center text-center mt-4" v-if="!isStar">
         <button
             type="button"
             class="btn btn-success me-2"
             @click="handleStar"
         >收藏
+        </button>
+      </div>
+      <div class="col-md-3 d-flex justify-content-center text-center mt-4" v-else>
+        <button
+            type="button"
+            class="btn btn-success me-2"
+            @click="handleCancelStar"
+        >取消收藏
         </button>
       </div>
     </div>
