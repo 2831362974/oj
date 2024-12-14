@@ -22,7 +22,23 @@ const fetchData = async () => {
     console.error('获取我的题目数据失败', error);
   }
 };
-
+// 获取难度徽章的类名
+const getDifficultyBadge = (difficulty) => {
+  switch (difficulty) {
+    case 1:
+      return 'bg-gradient-success';
+    case 2:
+      return 'bg-gradient-success';
+    case 3:
+      return 'bg-gradient-warning';
+    case 4:
+      return 'bg-gradient-danger';
+    case 5:
+      return 'bg-gradient-danger';
+    default:
+      return 'bg-gradient-secondary';
+  }
+};
 onMounted(() => {
   fetchData();
 });
@@ -43,9 +59,8 @@ onMounted(() => {
                 <tr>
                   <!--            表头的内容由数据库设计决定-->
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">id</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">title</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">title</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Difficulty</th>
-                  <th class="text-center text-secondary text-xxs font-weight-bolder opacity-7">star</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -66,10 +81,6 @@ onMounted(() => {
                   </td>
                   <td class="align-middle text-center text-sm">
                     <span :class="['badge badge-sm', getDifficultyBadge(item.difficulty)]">{{ item.difficulty }}</span>
-                  </td>
-                  <td class="align-middle text-center">
-                    <i v-if="!item.isFavorited" class="far fa-star" @click="handleFavoriteQuestion(item.id)"></i>
-                    <i v-else class="fas fa-star" @click="handleUnFavoriteQuestion(item.id)"></i>
                   </td>
                 </tr>
                 </tbody>
@@ -90,9 +101,8 @@ onMounted(() => {
                 <tr>
                   <!--            表头的内容由数据库设计决定-->
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">id</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">title</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">title</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Difficulty</th>
-                  <th class="text-center text-secondary text-xxs font-weight-bolder opacity-7">star</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -106,7 +116,7 @@ onMounted(() => {
                   </td>
                   <td>
                     <div class="d-flex px-2 py-1">
-                      <div class="d-flex flex-column justify-content-center">
+                      <div class="d-flex flex-column justify-content-center ">
                         <h6 class="mb-0 text-sm">{{ item.title }}</h6>
                       </div>
                     </div>
@@ -114,10 +124,7 @@ onMounted(() => {
                   <td class="align-middle text-center text-sm">
                     <span :class="['badge badge-sm', getDifficultyBadge(item.difficulty)]">{{ item.difficulty }}</span>
                   </td>
-                  <td class="align-middle text-center">
-                    <i v-if="!item.isFavorited" class="far fa-star" @click="handleFavoriteQuestion(item.id)"></i>
-                    <i v-else class="fas fa-star" @click="handleUnFavoriteQuestion(item.id)"></i>
-                  </td>
+
                 </tr>
                 </tbody>
               </table>

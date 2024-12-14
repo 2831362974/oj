@@ -155,8 +155,8 @@ const fetchUserRecords = async (username) => {
     <p>当前查看用户: {{ currentUsername }}</p>
     <ul>
       <li v-for="record in userRecords" :key="record.submissionId">
-        <p><span>提交id:</span> {{ record.submissionId }}</p>
-        <p><span>提交结果:</span> {{ record.result }}</p>
+        <p><span>提交id:</span> {{ record.submissionId }}
+        <span>提交结果:</span> {{ record.score }}</p>
       </li>
     </ul>
   </el-dialog>

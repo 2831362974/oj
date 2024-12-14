@@ -184,7 +184,7 @@ const fetchProblemRecords = async (problemId) => {
   visible.value = true;
   try {
     const response = await fetchProblemRecord(problemId);
-    problemRecords.value = response.data; // 假设接口返回的数据就是答题记录数组
+    problemRecords.value = response.data;
   } catch (e) {
     console.log('error', e);
     ElMessage.error('无法获取答题记录');
@@ -292,7 +292,7 @@ const fetchProblemRecords = async (problemId) => {
             </tbody>
           </table>
           <!-- 添加新的tr元素用于放置分页模块 -->
-          <div class="pagination-row"
+          <div class="pagination-row pt-3"
                style="height: 50px; display: flex; justify-content: center; align-items: center;">
             <argon-pagination @page-change="handlePageChange">
               <!-- 循环生成页码导航，根据getPageNumbers函数返回的数组 -->
@@ -310,7 +310,7 @@ const fetchProblemRecords = async (problemId) => {
     <ul>
       <li v-for="record in problemRecords" :key="record.submissionId">
         <p><span>提交id:</span> {{ record.submissionId }}</p>
-        <p><span>提交结果:</span> {{ record.result }}</p>
+        <p><span>提交结果:</span> {{ record.score }}</p>
       </li>
     </ul>
   </el-dialog>

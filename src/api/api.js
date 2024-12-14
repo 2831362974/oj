@@ -83,9 +83,9 @@ export const fetchPassedProblems = (username) => http.get(`/problem/passed-probl
 //管理员
 
 //1.获取用户记录*
-export const fetchUserRecord=(username) => http.get(`/submission/user-records`,{username:username});
+export const fetchUserRecord=(username) => http.get(`/submission/user-records/${username}`);
 //2.获取题目记录*
-export const fetchProblemRecord = (problemId) => http.get(`/submission/problem-records`, {problemId:problemId});
+export const fetchProblemRecord = (problemId) => http.get(`/submission/problem-records/${problemId}`);
 
 //系统管理员
 
