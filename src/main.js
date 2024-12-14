@@ -11,6 +11,7 @@ import ArgonDashboard from "./argon-dashboard";
 import Element from 'element-plus';
 import 'element-plus/dist/index.css'
 
+
 const app = createApp(App)
 app.use(Element);
 app.use(store);
