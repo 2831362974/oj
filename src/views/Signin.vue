@@ -76,7 +76,7 @@ const handleApplyUnlock = async () => {
     ElMessage.success(response.data);
   }catch(e){
     console.error(e);
-    ElMessage.error('申请失败，请检查用户名');
+    ElMessage.error('申请失败，用户名错误或账号未锁定');
   }
 };
 // 控制申请解锁表单的函数

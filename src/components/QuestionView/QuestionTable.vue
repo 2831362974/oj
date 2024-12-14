@@ -2,9 +2,9 @@
 import {computed, onMounted, ref} from 'vue';
 import {useStore} from "vuex";
 import {useRouter} from 'vue-router';
-import {deleteQuestion, star, getQuestionBankData, cancelStar, fetchProblemRecord} from '@/api/api.js';
-import {ElMessage} from "element-plus";
-import QuestionSort from "@/components/QuestionView/QuestionSort.vue";
+import {deleteQuestion, getQuestionBankData, fetchProblemRecord} from '@/api/api.js';
+import {ElMessage,ElIcon, ElButton, ElTooltip} from "element-plus";
+import { ArrowDown, ArrowUp } from '@element-plus/icons-vue';
 import QuestionSearch from "@/components/QuestionView/QuestionSearch.vue";
 import ArgonButton from "@/components/ProfileView/ArgonButton.vue";
 import QuestionAdd from "@/components/QuestionView/QuestionAdd.vue";
@@ -20,6 +20,52 @@ const store = useStore();// 获取store实例
 const isAdmin = computed(() => store.state.isAdmin);
 
 
+// 添加当前排序字段的响应式数据，初始化为空表示未进行排序，可根据实际情况修改初始值
+const sortField = ref('id');
+// 添加排序方式的响应式数据，true表示升序，false表示降序，初始化为true
+const sortAscending = ref(true);
+// 点击图标进行排序的函数
+const sortBy = (field) => {
+  if (field === sortField.value) {
+    // 如果点击的是当前已排序的字段，切换排序方式（升序变降序，降序变升序）
+    sortAscending.value =!sortAscending.value;
+  } else {
+    // 如果点击的是其他字段，设置为升序排序，并更新排序字段
+    sortAscending.value = true;
+    sortField.value = field;
+  }
+  handleSort();
+};
+// 执行排序的方法
+const handleSort = () => {
+  if (sortField.value) {
+    questions.value.sort((a, b) => {
+      if (sortField.value === 'id') {
+        return sortAscending.value? a.id - b.id : b.id - a.id;
+      } else if (sortField.value === 'difficulty') {
+        return sortAscending.value? a.difficulty - b.difficulty : b.difficulty - a.difficulty;
+      }
+      return 0;
+    });
+  }
+};
+const updateSearchResults = (searchKeyword) => {
+  // 先将searchKeyword转换为字符串类型并去除两端空白字符，确保后续处理的规范性
+  searchKeyword = String(searchKeyword).trim();
+  if (!searchKeyword) {
+    // 如果搜索框为空字符串（去除空白后），直接使用初始题目列表数据
+    questions.value = [...initialQuestion.value];
+  } else {
+    // 使用更严谨的方式进行过滤，避免可能出现的类型问题
+    questions.value = initialQuestion.value.filter(item => {
+      const idMatch = String(item.id).includes(searchKeyword);
+      const titleMatch = item.title.toLowerCase().includes(searchKeyword.toLowerCase());
+      return idMatch || titleMatch;
+    });
+  }
+  // 搜索结果更新后，重置当前页码为1，确保分页从第一页开始展示搜索结果
+  currentPage.value = 1;
+};
 const currentPage = ref(1);// 当前页码，初始化为1
 const pageSize = ref(8);// 每页显示的记录数量，设置为8
 const visiblePageRange = ref(5);// 定义显示的页码数量范围（可根据实际情况调整），用于控制省略号的显示
@@ -88,10 +134,6 @@ const getQuestions = async () => {
   }
 };
 
-const updateSearchResults = (searchResults) => {
-  questions.value = searchResults;
-};
-
 // 确认删除题目的函数
 const handleDeleteQuestion = async (problemId) => {
   try {
@@ -152,19 +194,10 @@ const fetchProblemRecords = async (problemId) => {
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-2">
-        <h6 class="text-center text-white">排序方式</h6>
-      </div>
-      <div class="col-3">
-        <question-sort @sort-change="handleSortChange"></question-sort>
-      </div>
-      <div class="col-1">
-        <h6 class="text-center text-white">搜索</h6>
-      </div>
-      <div class="col-4">
+      <div class="col-8 px-6">
         <question-search @search-result="updateSearchResults" :questions="questions"></question-search>
       </div>
-      <div class="col-2" v-if="isAdmin">
+      <div class="col-4 text-center" v-if="isAdmin">
         <ArgonButton color="success" class="my-auto ms-5" data-bs-toggle="modal" data-bs-target="#addQuestionModal">
           增加题目
         </ArgonButton>
@@ -182,9 +215,30 @@ const fetchProblemRecords = async (problemId) => {
             <thead>
             <tr>
               <!--            表头的内容由数据库设计决定-->
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">id</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">id
+                <el-tooltip content="点击排序" placement="top">
+                  <el-button type="text" @click="sortBy('id')">
+                    <el-icon v-if="sortField === 'id' && sortAscending">
+                      <ArrowUp />
+                    </el-icon>
+                    <el-icon v-else>
+                      <ArrowDown />
+                    </el-icon>
+                  </el-button>
+                </el-tooltip>
+              </th>
               <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">title</th>
               <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Difficulty
+                <el-tooltip content="点击排序" placement="top">
+                  <el-button type="text" @click="sortBy('difficulty')">
+                    <el-icon v-if="sortField === 'difficulty' && sortAscending">
+                      <ArrowUp />
+                    </el-icon>
+                    <el-icon v-else>
+                      <ArrowDown />
+                    </el-icon>
+                  </el-button>
+                </el-tooltip>
               </th>
               <!--            <th class="text-center text-secondary text-xxs font-weight-bolder opacity-7" v-if="!isAdmin">star</th>-->
               <th class="text-center text-secondary opacity-7" v-if="!isAdmin"></th>

@@ -1,46 +1,28 @@
 <script setup>
-import { ref } from 'vue';
+import {ref,defineEmits} from 'vue';
 import ArgonButton from "@/components/ProfileView/ArgonButton.vue";
 
-// 定义自定义事件
+const searchKeyword = ref('');  // 用于保存输入框的内容
+
 const emit = defineEmits(['search-result']);
-// 接收父组件传递的属性
-const props = defineProps({
-  questions: {
-    type: Array,
-    required: true
-  }
-});
-
-const searchKeyword = ref('');
-
+// 触发父组件的事件，将搜索关键字传递给父组件
 const handleSearch = () => {
-  const keyword = searchKeyword.value.trim().toLowerCase();
-  let filteredQuestions;
-  if (keyword === '') {
-    // 当搜索关键词为空字符串时，直接返回全部题目（即props.questions）
-    filteredQuestions = props.questions;
-  } else {
-    filteredQuestions = props.questions.filter((question) => {
-      const idMatch = question.id.toString().toLowerCase().includes(keyword);
-      const titleMatch = question.title.toLowerCase().includes(keyword);
-      return idMatch || titleMatch;
-    });
-  }
-  emit('search-result', filteredQuestions);
+  const keyword = searchKeyword.value.trim();
+  console.log('即将传递的搜索关键词:', keyword); // 添加调试信息，打印关键词
+  // 定义自定义事件
+  emit('search-result', keyword);
 };
 </script>
 <template>
   <div class="input-group mb-3">
-    <!-- 搜索输入框 -->
+    <!-- 搜索输入框，移除@change事件绑定 -->
     <input
         type="text"
         class="form-control"
         placeholder="输入ID或标题进行搜索"
         v-model="searchKeyword"
-        @change="handleSearch"
     />
-    <!-- 搜索按钮 -->
+    <!-- 搜索按钮，保留@click事件绑定来触发handleSearch函数 -->
     <ArgonButton
         color="success"
         size="sm"
@@ -51,7 +33,3 @@ const handleSearch = () => {
     </ArgonButton>
   </div>
 </template>
-
-<style scoped>
-
-</style>

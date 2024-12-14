@@ -47,7 +47,7 @@ onMounted(() => {
   }
 });
 
-const emit = defineEmits(['runCode']);
+const emit = defineEmits(['runCode','handleStar','handleCancelStar']);
 // 运行代码的方法 抛出事件runCode，父组件可调用数据
 const runCode = () => {
   const currentCode = {

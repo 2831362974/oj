@@ -51,8 +51,7 @@ export const star = (problemId) => http.post(`/problem/favorite-problem/${proble
 export const cancelStar = (problemId) => http.delete(`/problem/favorite-problem/${problemId}`);
 // 12. 检测是否收藏
 export const getIsStar = (problemId) => http.get(`/problem/checkFavorite/${problemId}`);
-// 12.排序 后端
-// 13.搜索 前端
+// 13.排序&搜索 前端实现
 
 /*用户管理功能 API*/
 
