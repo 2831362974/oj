@@ -91,6 +91,10 @@ const goToSignup = () => {
 const goToReset=()=>{
   router.push('/reset');
 }
+//
+const goToRoot=()=>{
+  router.push('/signIn/root');
+}
 </script>
 <template>
   <div class="container top-0 position-sticky z-index-sticky">
@@ -196,6 +200,11 @@ const goToReset=()=>{
                 <div class="px-1 pt-0 text-center card-footer px-lg-2">
                   <p class="mx-auto mb-4 text-sm">
                     <a href="javascript:" class="text-success text-gradient font-weight-bold" @click.prevent="goToReset"> Forget password?</a>
+                  </p>
+                </div>
+                <div class="px-1 pt-0 text-center card-footer px-lg-2">
+                  <p class="mx-auto mb-4 text-sm">
+                    <a href="javascript:" class="text-success text-gradient font-weight-bold" @click.prevent="goToRoot"> Root Login</a>
                   </p>
                 </div>
               </div>
