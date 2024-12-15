@@ -36,9 +36,9 @@ onMounted(async () => {
   }
 });
 
-//todo 用于存储运行结果的响应式对象，对象数组
+//用于存储运行结果的响应式对象，对象数组
 const result = ref([]);
-//todo 提交代码，code数据传入语言和代码，problemId 返回一个数组，是评测用例的结果
+//提交代码
 const handleRunCode = async (currentCode) => {
   // 调用api.js中定义的提交代码接口函数
   const codeData={

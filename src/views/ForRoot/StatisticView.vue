@@ -129,7 +129,7 @@ onMounted(() => {
     </div>
     <div class="row">
       <div class="card-header pb-0">
-        <h6>用户名单</h6>
+        <h6>系统日志</h6>
       </div>
 
       <div class="card-body px-0 pt-0 pb-2">

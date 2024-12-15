@@ -74,7 +74,6 @@ export const addAdminUser = (newAdmin) => http.post('/sysAdmin/add-admin', newAd
 
 /*记录管理*/
 
-//todo 用户自己 只返回题号？不行吧
 //1.获取用户收藏题目*
 export const fetchFavoriteProblems = () => http.get(`/problem/getFavorite`);
 //2.获取用户已通过题目*

@@ -1,6 +1,4 @@
 <script setup>
-//todo 1.从后端获取身份信息后的逻辑 2.向后端发送修改密码的请求
-//todo name属性不要的话删了
 import {onBeforeMount, onMounted, onBeforeUnmount, computed, ref} from "vue";
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
@@ -15,9 +13,8 @@ import ChangePasswd from "@/components/ProfileView/ChangePasswdModel.vue";
 
 const router = useRouter();
 const store = useStore();
+
 //注意，computed返回一个对象！！！在js调用要加.value
-const isSignIn = computed(() => store.state.isSignIn);
-const isAdmin = computed(() => store.state.isAdmin);
 const username = computed(() => store.state.username);
 
 const body = document.getElementsByTagName("body")[0];
@@ -87,14 +84,13 @@ const logout = () => {
           <div class="row gx-4">
             <div class="col-4 my-auto">
               <div class="h-100">
-                <h5 class="mb-1">User name</h5>
-                <p class="mb-0 font-weight-bold text-sm">User identity</p>
+                <h5 class="mb-1">{{userInfo.username}}</h5>
               </div>
             </div>
             <div class="col-6 my-auto"></div>
             <div class="col-2 my-auto">
               <div class="h-100">
-                <ArgonButton color="success" size="sm" class="ms-auto" @click="logout">退出登录</ArgonButton>
+                <ArgonButton color="success" size="md" class="ms-auto" @click="logout">退出登录</ArgonButton>
               </div>
             </div>
             <div
@@ -107,7 +103,7 @@ const logout = () => {
         </div>
       </div>
     </div>
-    <div class="py-4 container-fluid">
+    <div class="py-5 container-fluid">
       <div class="row">
         <div class="col-md-8">
           <div class="card">

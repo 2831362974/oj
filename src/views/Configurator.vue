@@ -2,9 +2,11 @@
 //界面显示设置
 import { computed } from "vue";
 import { useStore } from "vuex";
+import {useRouter} from "vue-router";
 import { activateDarkMode, deactivateDarkMode } from "@/assets/js/dark-mode";
 
 const store = useStore();
+const router = useRouter();
 // state
 const sidebarType = computed(() => store.state.sidebarType);
 const toggleConfigurator = () => store.commit("toggleConfigurator");
@@ -26,6 +28,11 @@ const darkMode = () => {
     setSidebarType("bg-default");
     activateDarkMode();
   }
+};
+
+const logout = () => {
+  store.dispatch('logout');
+  router.push('/signIn');
 };
 </script>
 <template>
@@ -145,6 +152,20 @@ const darkMode = () => {
               @click="darkMode"
             />
           </div>
+        </div>
+        <div class="d-flex gap-2 text-center">
+          <button
+              id="btn-logout"
+              class="btn w-100 px-3 mb-2"
+              :class="
+              sidebarType === 'bg-white'
+                ? 'bg-gradient-success'
+                : 'btn-outline-success'
+            "
+              @click="logout"
+          >
+            logout
+          </button>
         </div>
       </div>
     </div>

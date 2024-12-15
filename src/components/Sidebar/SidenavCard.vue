@@ -34,7 +34,7 @@ defineProps({
 
       <h6 class="mb-0 text-dark up">Need Help ?</h6>
 
-      <p class="text-xs font-weight-bold">Please check our logs</p>
+      <p class="text-xs font-weight-bold">Please check our docs</p>
     </div>
 
     <a

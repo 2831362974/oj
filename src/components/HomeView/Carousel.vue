@@ -1,15 +1,21 @@
 <script setup >
 /*一个轮播*/
+import carousel1 from '@/assets/img/carousel-1.jpg';
+import carousel2 from '@/assets/img/carousel-2.jpg';
+import carousel3 from '@/assets/img/carousel-3.jpg';
+
 const CarouselImageStyle1 = {
-  'background-image': 'url(\'@/assets/img/carousel-1.jpg\')',
+  'background-image': `url(${carousel1})`,
   'background-size': 'cover'
 };
+
 const CarouselImageStyle2 = {
-  'background-image': 'url(\'@/assets/img/carousel-2.jpg\')',
+  'background-image': `url(${carousel2})`,
   'background-size': 'cover'
 };
+
 const CarouselImageStyle3 = {
-  'background-image': 'url(\'@/assets/img/carousel-3.jpg\')',
+  'background-image': `url(${carousel3})`,
   'background-size': 'cover'
 };
 </script>
@@ -33,7 +39,7 @@ const CarouselImageStyle3 = {
             >
               <i class="ni ni-camera-compact text-dark opacity-10"></i>
             </div>
-            <h5 class="text-white mb-1">Get started with Argon</h5>
+            <h5 class="text-white mb-1">Get started with MyOJ</h5>
             <p>
               There’s nothing I really wanted to do in life that I wasn’t able
               to get good at.

@@ -64,7 +64,7 @@ const isRoot = computed(() => store.getters.isRoot);
         <sidenav-item
             to="/admin"
             :class="getRoute() === 'admin' ? 'active' : ''"
-            :navText="'用户管理'"
+            :navText="'用户信息'"
         >
           <template v-slot:icon>
             <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
@@ -78,7 +78,7 @@ const isRoot = computed(() => store.getters.isRoot);
             :navText="'用户管理'"
         >
           <template v-slot:icon>
-            <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
+            <i class="ni ni-camera-compact text-success text-sm opacity-10"></i>
           </template>
         </sidenav-item>
       </li>
@@ -140,7 +140,7 @@ const isRoot = computed(() => store.getters.isRoot);
           {
             label: 'Documentation',
             route:
-              'https://www.creative-tim.com/learning-lab/vue/overview/argon-dashboard/',
+              'https://github.com/2831362974/oj',
             color: 'dark',
           },
         ],
